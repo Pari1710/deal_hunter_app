@@ -119,78 +119,60 @@
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-    <div class="sidebar-header">🏘️ Capital<span>Realty Hub</span></div>
-    <ul class="nav-menu">
-        <li class="nav-item"><a href="#dashboard" class="nav-link active">
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z"/></svg>
-            Dashboard
-        </a></li>
-        <li class="nav-item"><a href="#my-portfolio" class="nav-link">
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-            My Portfolio
-        </a></li>
-        <li class="nav-item"><a href="#deal-analyzer" class="nav-link">
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-            Deal Analyzer
-        </a></li>
-        <li class="nav-item"><a href="#market-pulse" class="nav-link">
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.09-4-4L2 16.99z"/></svg>
-            Market Pulse
-        </a></li>
-        <li class="nav-item"><a href="#cashflow-ledger" class="nav-link">
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-1 14H5c-.55 0-1-.45-1-1V8h16v9c0 .55-.45 1-1 1zm1-11H4V6h16v2z"/></svg>
-            Cash Flow Ledger
-        </a></li>
-         <li class="nav-item"><a href="#ai-copilot" class="nav-link">
-            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
-            AI Co-pilot
-        </a></li>
-    </ul>
-</aside>
+    <aside class="sidebar">
+        <div class="sidebar-header">🏘️ Capital<span>Realty Hub</span></div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#live-deals" class="nav-link active">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11 11H3v2h8v-2zm2-4H3v2h10V7zM3 17h14v-2H3v2zm18.5-9l-3.5 3.5-2-2-5 5L8 12l9.5-9.5z"/></svg>
+                Live Deal Finder
+            </a></li>
+            <li class="nav-item"><a href="#my-portfolio" class="nav-link">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                My Portfolio
+            </a></li>
+            <li class="nav-item"><a href="#deal-analyzer" class="nav-link">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                Deal Analyzer
+            </a></li>
+            <li class="nav-item"><a href="#market-pulse" class="nav-link">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.09-4-4L2 16.99z"/></svg>
+                Market Pulse
+            </a></li>
+             <li class="nav-item"><a href="#ai-copilot" class="nav-link">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                AI Co-pilot
+            </a></li>
+        </ul>
+    </aside>
 
-        <div id="loader">
-            <div class="loader-dots"><span></span><span></span><span></span></div>
-            <p class="loader-text">Initializing AI... Fetching live market data...</p>
-        </div>
-        
-        <main class="main-dashboard" id="dashboard-content" style="display:none;">
-            <section id="kpi-section" class="kpi-grid">
-                <div class="card kpi-card"><h3>Deals in Database</h3><p class="metric-value" id="total-deals">0</p></div>
-                <div class="card kpi-card"><h3>Avg. Cap Rate</h3><p class="metric-value" id="avg-cap-rate">0.00%</p></div>
-                <div class="card kpi-card"><h3>Avg. CoC Return</h3><p class="metric-value" id="avg-coc-return">0.00%</p></div>
-                <div class="card kpi-card"><h3>Avg. Score</h3><p class="metric-value" id="avg-score">0.00</p></div>
-            </section>
-            
-            <section id="table-section" class="card">
-                <h2>Live Deal Listings</h2>
-                <div style="width: 100%; overflow-x: auto;">
+    <main class="main-content">
+        <section id="live-deals" class="page active">
+            <h2>Live Deal Finder</h2>
+            <p class="page-description">Displaying the latest deals found by our daily automated scraper.</p>
+            <div id="loader" class="card">
+                <div class="loader-dots"><span></span><span></span><span></span></div>
+                <p class="loader-text">Initializing AI... Fetching live market data...</p>
+            </div>
+            <div id="live-deals-content" class="card" style="display:none;">
+                 <div class="table-wrapper">
                     <table id="results-table">
                         <thead><tr><th>Title</th><th>Price</th><th>Area (sqft)</th><th>Score</th></tr></thead>
                         <tbody id="results-body"></tbody>
                     </table>
-                </div>
-            </section>
-            
-            <aside id="top-deals-section" class="card">
-                <h2>Top Performing Deals</h2>
-                <div id="top-deals-list">
-                    </div>
-            </aside>
-        </main>
-<div id="page-content" style="margin-left: 260px; width: calc(100% - 260px); padding: 40px;">
-    <section id="my-portfolio" class="page card">
-        <h2>My Portfolio</h2>
-        <p>This is a prototype view of your managed properties.</p>
-    </section>
+                 </div>
+            </div>
+        </section>
 
-    <section id="deal-analyzer" class="page card"><h2>Deal Analyzer</h2><p>Coming Soon...</p></section>
-    <section id="market-pulse" class="page card"><h2>Market Pulse</h2><p>Coming Soon...</p></section>
-    <section id="cashflow-ledger" class="page card"><h2>Cash Flow Ledger</h2><p>Coming Soon...</p></section>
-    <section id="ai-copilot" class="page card"><h2>AI Co-pilot</h2><p>Coming Soon...</p></section>
-</div>
-    
+        <section id="my-portfolio" class="page">
+            <h2>My Portfolio</h2>
+            <p class="page-description">A snapshot of your current real estate assets.</p>
+            <div class="card"><h3>Feature Coming Soon...</h3></div>
+        </section>
+        
+        <section id="deal-analyzer" class="page"><h2>Deal Analyzer</h2><p class="page-description">A powerful tool to underwrite any potential investment.</p><div class="card"><h3>Coming Soon...</h3></div></section>
+        <section id="market-pulse" class="page"><h2>Market Pulse</h2><p class="page-description">High-level analytics for the Delhi NCR market.</p><div class="card"><h3>Coming Soon...</h3></div></section>
+        <section id="ai-copilot" class="page"><h2>AI Co-pilot</h2><p class="page-description">Your personal AI real estate investment assistant.</p><div class="card"><h3>Coming Soon...</h3></div></section>
+    </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -310,4 +292,5 @@ switchPage(initialHash);
     </script>
 </body>
 </html>
+
 
