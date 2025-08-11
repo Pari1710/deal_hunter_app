@@ -3,234 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capital Realty Hub - AI Property Intelligence</title>
+    <title>Realty Pulse - AI Deal Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- GLOBAL STYLES & LIGHT THEME --- */
+        /* --- NEW FUNKY PINK COLOR SCHEME & FONTS --- */
         :root {
-            --bg-light: #F8F9FA; --bg-white: #FFFFFF; --border-color: #E9ECEF;
-            --text-dark: #212529; --text-muted: #6C757D; --accent-blue: #0D6EFD;
-            --accent-green: #198754; --accent-yellow: #FFC107; --accent-red: #DC3545;
+            --bg-dark-gradient: linear-gradient(135deg, #4c1d95, #701a75);
+            --bg-medium-transparent: rgba(31, 41, 55, 0.5);
+            --border-color: rgba(99, 102, 241, 0.3);
+            --text-light: #F9FAFB;
+            --text-muted: #d8cde0;
+            --accent-pink: #f472b6;
+            --accent-yellow: #fde047;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-dark-gradient);
+            color: var(--text-light);
+            min-height: 100vh;
         }
-
-        /* --- SIDEBAR NAVIGATION --- */
-        .sidebar {
-            width: 260px;
-            background-color: var(--bg-white);
-            border-right: 1px solid var(--border-color);
-            padding: 24px;
-            height: 100%;
-            position: fixed;
+        
+        /* --- NEW TOP-DOWN LAYOUT --- */
+        .app-container {
             display: flex;
             flex-direction: column;
-            flex-shrink: 0;
+            gap: 30px;
+            padding: 30px;
+            max-width: 1600px;
+            margin: auto;
         }
-        .sidebar-header { font-size: 1.5rem; font-weight: 700; margin-bottom: 40px; }
-        .sidebar-header span { color: var(--accent-blue); }
-        .nav-menu { list-style: none; flex-grow: 1; }
-        .nav-item a { display: flex; align-items: center; padding: 14px; margin-bottom: 8px; border-radius: 8px; text-decoration: none; color: #495057; font-weight: 500; transition: background-color 0.2s, color 0.2s; }
-        .nav-item a:hover { background-color: #e9ecef; color: var(--text-dark); }
-        .nav-item a.active { background-color: var(--accent-blue); color: #fff; }
-        .nav-item a svg { margin-right: 16px; width: 20px; height: 20px; }
-
-        /* --- MAIN CONTENT AREA --- */
-        .main-content {
-            margin-left: 260px;
-            width: calc(100% - 260px);
-            height: 100vh;
-            overflow-y: auto;
-            padding: 40px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeInSlideUp 0.5s ease-out;
         }
-        .page { display: none; animation: fadeIn 0.5s ease-out; }
-        .page.active { display: block; }
-        h2 { font-size: 2.25rem; margin-bottom: 10px; }
-        .page-description { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; }
-        .card { background-color: var(--bg-white); padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 24px; }
-        
-        /* --- SHARED COMPONENTS --- */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-        .kpi-card h3 { font-size: 1rem; color: var(--text-muted); font-weight: 500; }
-        .kpi-card .metric-value { font-size: 2.25rem; font-weight: 700; color: var(--accent-blue); }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; font-size: 1rem; border: 1px solid var(--border-color); border-radius: 8px; }
-        .form-button { width: 100%; padding: 15px; font-size: 1rem; font-weight: 600; color: #fff; background-color: var(--accent-blue); border: none; border-radius: 8px; cursor: pointer; }
-        
-        /* --- LIVE DEAL FINDER --- */
-        table { width: 100%; border-collapse: collapse; }
-        thead th { padding: 12px 16px; text-align: left; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid var(--border-color); }
-        tbody td { padding: 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        .score-tag { padding: 4px 10px; border-radius: 15px; font-size: 0.9rem; font-weight: 700; color: #fff; background-color: var(--accent-blue); }
+        .header .logo { font-size: 1.75rem; font-weight: 700; }
+        .header .logo span { color: var(--accent-yellow); }
 
-        /* --- AI CHAT PROTOTYPE --- */
-        .chat-layout { display: flex; height: 60vh; }
-        .chat-window { flex-grow: 1; display: flex; flex-direction: column; }
-        .chat-messages { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; overflow-y: auto; }
-        .chat-message { margin-bottom: 12px; max-width: 80%; }
-        .ai-message { align-self: flex-start; background-color: var(--bg-light); padding: 12px; border-radius: 12px 12px 12px 0; }
-        .chat-input { display: flex; margin-top: 16px; }
-        .chat-input input { flex-grow: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px 0 0 8px; }
-        .chat-input button { padding: 12px 20px; border: none; background-color: var(--accent-blue); color: #fff; border-radius: 0 8px 8px 0; cursor: pointer; }
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        h2 { font-size: 1.8rem; margin-bottom: 20px; color: var(--text-light); }
+        .card {
+            background-color: var(--bg-medium-transparent);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-radius: 20px; /* More rounded */
+            border: 1px solid var(--border-color);
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+            opacity: 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
         
-        /* --- LOADER --- */
+        /* --- KPI Cards Animation --- */
+        #kpi-section .card:nth-child(1) { animation-delay: 0.1s; }
+        #kpi-section .card:nth-child(2) { animation-delay: 0.2s; }
+        #kpi-section .card:nth-child(3) { animation-delay: 0.3s; }
+        #kpi-section .card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* --- KPI Cards --- */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .kpi-card h3 { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+        .kpi-card .metric-value { font-size: 2.25rem; font-weight: 700; color: var(--accent-yellow); }
+        
+        /* --- Table --- */
+        .table-wrapper { width: 100%; overflow-x: auto; }
+        #results-table { width: 100%; border-collapse: collapse; }
+        #results-table thead th { padding: 12px 16px; text-align: left; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid var(--border-color); }
+        #results-table tbody td { padding: 16px; border-bottom: 1px solid var(--border-color); }
+        #results-table tbody tr:last-child td { border-bottom: none; }
+        .score { color: var(--accent-pink); font-weight: 700; }
+
+        /* --- Top Deals List --- */
+        .deal-list-item { padding: 15px 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .deal-list-item:last-child { border-bottom: none; }
+        .deal-info h4 { font-size: 1rem; margin-bottom: 4px; color: var(--text-light); }
+        .deal-info p { font-size: 0.9rem; color: var(--text-muted); }
+        .deal-score { font-size: 1.5rem; font-weight: 700; color: var(--accent-pink); }
+        
+        /* --- Loader --- */
         #loader { text-align: center; padding: 80px; }
-        .loader-pulse { width: 50px; height: 50px; margin: auto; border-radius: 50%; background-color: var(--accent-blue); animation: pulse 1.5s infinite ease-in-out; }
-        @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.8); opacity: 0.5; } }
+        .loader-text { margin-top: 20px; color: var(--text-muted); font-size: 1.2rem; }
+        .loader-dots span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: var(--accent-pink); margin: 0 5px; animation: loaderBounce 1.4s infinite ease-in-out both; }
+        .loader-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loader-dots span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes loaderBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
     </style>
 </head>
 <body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">🏘️ Realty<span>Pulse</span></div>
+        </header>
 
-    <aside class="sidebar">
-        <div class="sidebar-header">Capital<span>Realty Hub</span></div>
-        <ul class="nav-menu">
-            <li class="nav-item"><a href="#live-deals" class="nav-link active">
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11 11H3v2h8v-2zm2-4H3v2h10V7zM3 17h14v-2H3v2zm18.5-9l-3.5 3.5-2-2-5 5L8 12l9.5-9.5z"/></svg>
-                Live Deal Finder
-            </a></li>
-            <li class="nav-item"><a href="#my-properties" class="nav-link">
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-                My Properties
-            </a></li>
-            <li class="nav-item"><a href="#investment-analyzer" class="nav-link">
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-                Investment Analyzer
-            </a></li>
-            <li class="nav-item"><a href="#market-insights" class="nav-link">
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.09-4-4L2 16.99z"/></svg>
-                Market Insights
-            </a></li>
-            <li class="nav-item"><a href="#ai-chat" class="nav-link">
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-                AI Chat
-            </a></li>
-        </ul>
-    </aside>
+        <div id="loader">
+            <div class="loader-dots"><span></span><span></span><span></span></div>
+            <p class="loader-text">Initializing AI... Fetching live market data...</p>
+        </div>
+        
+        <main id="dashboard-content" style="display:none;">
+            <section id="kpi-section" class="card">
+                <div class="kpi-grid">
+                    <div class="kpi-card"><h3>Deals in Database</h3><p class="metric-value" id="total-deals">0</p></div>
+                    <div class="kpi-card"><h3>Avg. Cap Rate</h3><p class="metric-value" id="avg-cap-rate">0.00%</p></div>
+                    <div class="kpi-card"><h3>Avg. CoC Return</h3><p class="metric-value" id="avg-coc-return">0.00%</p></div>
+                    <div class="kpi-card"><h3>Avg. Score</h3><p class="metric-value" id="avg-score">0.00</p></div>
+                </div>
+            </section>
+            
+            <section id="top-deals-section" class="card">
+                <h2>Top Performing Deals</h2>
+                <div id="top-deals-list">
+                    </div>
+            </section>
 
-    <main class="main-content">
-        <section id="live-deals" class="page active">
-            <h2>Live Deal Finder</h2>
-            <p class="page-description">Displaying the latest deals found by our daily automated scraper.</p>
-            <div id="loader" class="card">
-                <div class="loader-pulse"></div>
-                <p style="margin-top: 20px; color: var(--text-muted);">Connecting to live market data...</p>
-            </div>
-            <div id="live-deals-content" class="card" style="display:none;">
-                 <div class="table-wrapper">
-                    <table>
+            <section id="table-section" class="card">
+                <h2>Live Deal Listings</h2>
+                <div class="table-wrapper">
+                    <table id="results-table">
                         <thead><tr><th>Title</th><th>Price</th><th>Area (sqft)</th><th>Score</th></tr></thead>
                         <tbody id="results-body"></tbody>
                     </table>
-                 </div>
-            </div>
-        </section>
-
-        <section id="my-properties" class="page">
-            <h2>My Properties</h2>
-            <p class="page-description">A grid view of your currently owned real estate assets.</p>
-            <div class="grid-container">
-                <div class="card"><h3>2 BHK Flat, DaryaGanj</h3><p>AI Score: 8.5 | Cap Rate: 4.1%</p></div>
-                <div class="card"><h3>3 BHK Flat, Prithviraj Road</h3><p>AI Score: 7.2 | Cap Rate: 3.8%</p></div>
-                <div class="card"><h3>4 BHK Floor, Defence Colony</h3><p>AI Score: 6.9 | Cap Rate: 3.5%</p></div>
-            </div>
-        </section>
-        
-        <section id="investment-analyzer" class="page">
-            <h2>Investment Analyzer</h2>
-            <p class="page-description">A powerful tool to underwrite any potential investment.</p>
-            <div class="card">
-                <div class="form-group"><label>Purchase Price</label><input type="text" placeholder="e.g., 5000000"></div>
-                <div class="form-group"><label>Monthly Rent</label><input type="text" placeholder="e.g., 25000"></div>
-                <button class="form-button">Calculate Metrics</button>
-            </div>
-        </section>
-        
-        <section id="market-insights" class="page">
-             <h2>Market Insights</h2>
-             <p class="page-description">High-level analytics for the Delhi NCR market.</p>
-             <div class="card grid-container">
-                <div class="kpi-card"><h3>Median Price</h3><p class="metric-value">₹1.2 Cr</p></div>
-                <div class="kpi-card"><h3>Price Growth (YoY)</h3><p class="metric-value" style="color:var(--accent-green)">+8.5%</p></div>
-                <div class="kpi-card"><h3>Population Growth</h3><p class="metric-value" style="color:var(--accent-green)">+2.3%</p></div>
-             </div>
-        </section>
-
-        <section id="ai-chat" class="page">
-             <h2>AI Chat</h2>
-             <p class="page-description">Your personal AI real estate investment assistant.</p>
-             <div class="card">
-                <div class="chat-layout">
-                    <div class="chat-window">
-                        <div class="chat-messages">
-                            <div class="chat-message ai-message">Hello! I'm your AI assistant. How can I help you analyze the real estate market today?</div>
-                        </div>
-                        <div class="chat-input">
-                            <input type="text" placeholder="Ask about property analysis, market trends...">
-                            <button>Send</button>
-                        </div>
-                    </div>
                 </div>
-             </div>
-        </section>
-    </main>
-    
+            </section>
+        </main>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- PAGE ROUTING LOGIC ---
-            const navLinks = document.querySelectorAll('.nav-link');
-            const pages = document.querySelectorAll('.page');
-
-            function switchPage(hash) {
-                navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === hash));
-                pages.forEach(page => page.classList.toggle('active', '#' + page.id === hash));
-            }
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const hash = this.getAttribute('href');
-                    if (window.location.hash !== hash) window.history.pushState(null, null, hash);
-                    switchPage(hash);
-                });
-            });
-            const initialHash = window.location.hash || "#live-deals";
-            switchPage(initialHash);
-
-            // --- LIVE DASHBOARD FETCH LOGIC (No changes needed here) ---
             const apiBaseUrl = 'https://deal-hunter-api.onrender.com';
             const loader = document.getElementById('loader');
+            const dashboardContent = document.getElementById('dashboard-content');
             
+            function animateValue(element, start, end, duration, suffix = '') {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const currentValue = progress * (end - start) + start;
+                    if (suffix === '%') {
+                        element.innerHTML = `${currentValue.toFixed(2)}${suffix}`;
+                    } else if (Math.abs(end) < 100) {
+                         element.innerHTML = currentValue.toFixed(2);
+                    } else {
+                        element.innerHTML = Math.floor(currentValue).toLocaleString('en-IN');
+                    }
+                    if (progress < 1) window.requestAnimationFrame(step);
+                };
+                window.requestAnimationFrame(step);
+            }
+
             fetch(`${apiBaseUrl}/results`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.properties && data.properties.length > 0) {
+                        const properties = data.properties;
                         loader.style.display = 'none';
-                        document.getElementById('live-deals-content').style.display = 'block';
+                        dashboardContent.style.display = 'grid';
+                        
+                        const totalDeals = properties.length;
+                        const avgCapRate = properties.reduce((sum, p) => sum + p.cap_rate, 0) / totalDeals;
+                        const avgCocReturn = properties.reduce((sum, p) => sum + p.cash_on_cash_return, 0) / totalDeals;
+                        const avgScore = properties.reduce((sum, p) => sum + p.investment_score, 0) / totalDeals;
+
+                        animateValue(document.getElementById('total-deals'), 0, totalDeals, 1500);
+                        animateValue(document.getElementById('avg-cap-rate'), 0, avgCapRate, 1500, '%');
+                        animateValue(document.getElementById('avg-coc-return'), 0, avgCocReturn, 1500, '%');
+                        animateValue(document.getElementById('avg-score'), 0, avgScore, 1500);
+
                         const tableBody = document.getElementById('results-body');
                         tableBody.innerHTML = '';
-                        data.properties.forEach(prop => {
+                        properties.forEach(prop => {
                             let row = tableBody.insertRow();
                             row.innerHTML = `
                                 <td>${prop.title}</td>
                                 <td>${prop.price_text}</td>
                                 <td>${prop.area_sqft}</td>
-                                <td><b class="score-tag">${prop.investment_score.toFixed(2)}</b></td>
+                                <td><b class="score">${prop.investment_score.toFixed(2)}</b></td>
                             `;
                         });
+
+                        const topDealsList = document.getElementById('top-deals-list');
+                        topDealsList.innerHTML = '';
+                        properties.slice(0, 3).forEach(prop => { // Show top 3
+                            const dealItem = document.createElement('div');
+                            dealItem.className = 'deal-list-item';
+                            dealItem.innerHTML = `
+                                <div class="deal-info">
+                                    <h4>${prop.title.split('in')[0]}</h4>
+                                    <p>${prop.price_text}</p>
+                                </div>
+                                <div class="deal-score">${prop.investment_score.toFixed(2)}</div>
+                            `;
+                            topDealsList.appendChild(dealItem);
+                        });
+
                     } else {
-                        loader.innerHTML = '<p>The database is empty. The daily automated scraper will populate it soon.</p>';
+                        loader.innerHTML = '<p class="loader-text">The database is empty. The daily automated scraper will populate it soon.</p>';
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
-                    loader.innerHTML = '<p>Failed to load data from the API. The server may be starting up.</p>';
+                    loader.innerHTML = '<p class="loader-text">Failed to load data from the API. The server may be starting up or an error occurred.</p>';
                 });
         });
     </script>
