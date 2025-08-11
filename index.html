@@ -174,37 +174,59 @@
         <section id="ai-copilot" class="page"><h2>AI Co-pilot</h2><p class="page-description">Your personal AI real estate investment assistant.</p><div class="card"><h3>Coming Soon...</h3></div></section>
     </main>
 
-    <script>
+   <script>
     document.addEventListener('DOMContentLoaded', function() {
         // --- PAGE ROUTING LOGIC ---
         const navLinks = document.querySelectorAll('.nav-link');
         const pages = document.querySelectorAll('.page');
 
         function switchPage(hash) {
-            navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === hash));
-            pages.forEach(page => page.classList.toggle('active', '#' + page.id === hash));
+            navLinks.forEach(link => {
+                // Make the link in the sidebar active
+                if (link.getAttribute('href') === hash) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            pages.forEach(page => {
+                // Show the correct page content
+                if ('#' + page.id === hash) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
         }
+
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const hash = this.getAttribute('href');
-                if (window.location.hash !== hash) window.history.pushState(null, null, hash);
+                if (window.location.hash !== hash) {
+                    window.history.pushState(null, null, hash);
+                }
                 switchPage(hash);
             });
         });
-        const initialHash = window.location.hash || "#live-deals"; // <-- Corrected default page
+
+        // --- THIS IS THE CRITICAL FIX ---
+        // We set a valid default page to show on load.
+        const initialHash = window.location.hash || "#live-dashboard";
         switchPage(initialHash);
 
+
         // --- LIVE DASHBOARD FETCH LOGIC ---
-        const apiBaseUrl = 'https://deal-hunter-api.onrender.com';
+        const apiBaseUrl = 'https://deal-hunter-api.onrender.com'; // Your LIVE API URL
         const loader = document.getElementById('loader');
         
         fetch(`${apiBaseUrl}/results`)
             .then(response => response.json())
             .then(data => {
+                const liveDealsContent = document.getElementById('live-deals-content');
                 if (data.properties && data.properties.length > 0) {
                     loader.style.display = 'none';
-                    document.getElementById('live-deals-content').style.display = 'block';
+                    liveDealsContent.style.display = 'block';
                     
                     const tableBody = document.getElementById('results-body');
                     tableBody.innerHTML = '';
@@ -214,7 +236,7 @@
                             <td>${prop.title}</td>
                             <td>${prop.price_text}</td>
                             <td>${prop.area_sqft}</td>
-                            <td><b class="score">${prop.investment_score.toFixed(2)}</b></td>
+                            <td><b class="score-tag">${prop.investment_score.toFixed(2)}</b></td>
                         `;
                     });
                 } else {
@@ -229,6 +251,7 @@
 </script>
 </body>
 </html>
+
 
 
 
