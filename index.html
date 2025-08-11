@@ -1,255 +1,318 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Realty Pulse - AI Deal Command Center</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- VIBRANT COLOR SCHEME & FONTS --- */
-        :root {
-            --bg-dark: #111827;
-            --bg-medium: #1F2937;
-            --border-color: #374151;
-            --text-light: #F9FAFB;
-            --text-muted: #9CA3AF;
-            --accent-pink: #EC4899;
-            --accent-cyan: #22D3EE;
-            --accent-yellow: #fde047;
-        }
-        @keyframes fadeInSlideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #4c1d95, #701a75);
-            color: var(--text-light);
-            min-height: 100vh;
-        }
-        
-        /* --- LAYOUT --- */
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            padding: 30px;
-            max-width: 1600px;
-            margin: auto;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            animation: fadeInSlideUp 0.5s ease-out;
-        }
-        .header .logo { font-size: 1.75rem; font-weight: 700; }
-        .header .logo span { color: var(--accent-yellow); }
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Realty Pulse - AI Deal Command Center</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <style>
+         /* --- VIBRANT COLOR SCHEME & FONTS --- */
+         :root {
+             --bg-dark: #111827;
+             --bg-medium: #1F2937;
+             --border-color: #374151;
+             --text-light: #F9FAFB;
+             --text-muted: #9CA3AF;
+             --accent-pink: #EC4899;
+             --accent-cyan: #22D3EE;
+             --accent-yellow: #fde047;
+             --chart-primary: rgba(236, 72, 153, 0.7);
+             --chart-secondary: rgba(34, 211, 238, 0.7);
+             --chart-tertiary: rgba(253, 224, 71, 0.7);
+             --chart-quaternary: rgba(168, 85, 247, 0.7);
+         }
+         @keyframes fadeInSlideUp {
+             from { opacity: 0; transform: translateY(20px); }
+             to { opacity: 1; transform: translateY(0); }
+         }
+         * { box-sizing: border-box; margin: 0; padding: 0; }
+         body {
+             font-family: 'Poppins', sans-serif;
+             background: linear-gradient(135deg, #4c1d95, #701a75);
+             color: var(--text-light);
+             min-height: 100vh;
+         }
 
-        main {
-            display: grid;
-            grid-template-columns: 3fr 1fr;
-            grid-template-areas:
-                "kpis kpis"
-                "table deals"
-                "table insurance"; /* Added insurance to the grid */
-            gap: 30px;
-        }
-        #kpi-section { grid-area: kpis; }
-        #table-section { grid-area: table; }
-        #top-deals-section { grid-area: deals; }
-        #insurance-section { grid-area: insurance; } /* New grid area */
+         /* --- LAYOUT --- */
+         .app-container {
+             display: flex;
+             flex-direction: column;
+             gap: 30px;
+             padding: 30px;
+             max-width: 1600px;
+             margin: auto;
+         }
+         .header {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             padding-bottom: 20px;
+             border-bottom: 1px solid var(--border-color);
+             animation: fadeInSlideUp 0.5s ease-out;
+         }
+         .header .logo { font-size: 1.75rem; font-weight: 700; }
+         .header .logo span { color: var(--accent-yellow); }
 
-        h2 { font-size: 1.8rem; margin-bottom: 20px; color: var(--text-light); }
-        .card {
-            background-color: rgba(31, 41, 55, 0.5);
-            backdrop-filter: blur(10px);
-            padding: 24px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            animation: fadeInSlideUp 0.6s ease-out forwards;
-            opacity: 0;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* --- KPI Cards --- */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .kpi-card h3 { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
-        .kpi-card .metric-value { font-size: 2.25rem; font-weight: 700; color: var(--accent-yellow); }
-        
-        /* --- Table --- */
-        .table-wrapper { width: 100%; overflow-x: auto; }
-        #results-table { width: 100%; border-collapse: collapse; }
-        #results-table thead th { padding: 12px 16px; text-align: left; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid var(--border-color); }
-        #results-table tbody td { padding: 16px; border-bottom: 1px solid var(--border-color); }
-        #results-table tbody tr:last-child td { border-bottom: none; }
-        .score { color: var(--accent-pink); font-weight: 700; }
+         main {
+             display: grid;
+             grid-template-columns: 2fr 1fr; /* Main content and a sidebar-like area */
+             grid-template-areas:
+                 "kpis kpis"
+                 "analyzer distribution"
+                 "table deals";
+             gap: 30px;
+         }
+         #kpi-section { grid-area: kpis; }
+         #table-section { grid-area: table; }
+         #top-deals-section { grid-area: deals; }
+         #investment-analyzer-section { grid-area: analyzer; }
+         #portfolio-distribution-section { grid-area: distribution; }
 
-        /* --- Top Deals & Insurance List --- */
-        .list-item { padding: 15px 0; border-bottom: 1px solid var(--border-color); }
-        .list-item:last-child { border-bottom: none; }
-        .item-info h4 { font-size: 1rem; margin-bottom: 4px; color: var(--text-light); }
-        .item-info p { font-size: 0.9rem; color: var(--text-muted); }
-        .item-header { display: flex; justify-content: space-between; align-items: center; }
-        .item-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-pink); }
-        .status-badge { font-size: 0.8rem; font-weight: 600; padding: 4px 10px; border-radius: 15px; color: var(--bg-dark); }
-        .active { background-color: var(--accent-cyan); }
-        .expiring { background-color: var(--accent-yellow); }
 
-        /* --- Loader --- */
-        #loader { text-align: center; padding: 80px; }
-        .loader-dots span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: var(--accent-pink); margin: 0 5px; animation: loaderBounce 1.4s infinite ease-in-out both; }
-        .loader-dots span:nth-child(1) { animation-delay: -0.32s; }
-        .loader-dots span:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes loaderBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
-    </style>
-</head>
-<body>
-    <div class="app-container">
-        <header class="header">
-            <div class="logo">🏘️ Realty<span>Pulse</span></div>
-        </header>
+         h2 { font-size: 1.8rem; margin-bottom: 20px; color: var(--text-light); }
+         .card {
+             background-color: rgba(31, 41, 55, 0.5);
+             backdrop-filter: blur(10px);
+             padding: 24px;
+             border-radius: 20px;
+             border: 1px solid var(--border-color);
+             animation: fadeInSlideUp 0.6s ease-out forwards;
+             opacity: 0;
+             transition: transform 0.3s, box-shadow 0.3s;
+         }
+         .card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
 
-        <div id="loader">
-            <div class="loader-dots"><span></span><span></span><span></span></div>
-            <p style="margin-top: 20px; color: var(--text-muted);">Initializing AI... Fetching live market data...</p>
-        </div>
-        
-        <main id="dashboard-content" style="display:none;">
-            <section id="kpi-section" class="card">
-                <div class="kpi-grid" id="kpi-container">
-                    </div>
-            </section>
-            
-            <section id="table-section" class="card">
-                <h2>Live Deal Listings</h2>
-                <div class="table-wrapper">
-                    <table id="results-table">
-                        <thead><tr><th>Title</th><th>Price</th><th>Area (sqft)</th><th>Score</th></tr></thead>
-                        <tbody id="results-body"></tbody>
-                    </table>
-                </div>
-            </section>
-            
-            <aside id="top-deals-section" class="card">
-                <h2>Top Performing Deals</h2>
-                <div id="top-deals-list">
-                    </div>
-            </aside>
+         /* --- KPI Cards --- */
+         .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+         .kpi-card h3 { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+         .kpi-card .metric-value { font-size: 2.25rem; font-weight: 700; color: var(--accent-yellow); }
 
-            <aside id="insurance-section" class="card">
-                <h2>Insurance Management</h2>
-                <div class="kpi-grid" style="margin-bottom: 20px;">
-                    <div class="kpi-card"><h3>Total Policies</h3><p class="metric-value">3</p></div>
-                    <div class="kpi-card"><h3>Annual Premium</h3><p class="metric-value">$3,200</p></div>
-                </div>
-                <div id="insurance-list">
-                    <div class="list-item">
-                        <div class="item-header">
-                            <div class="item-info">
-                                <h4>1234 Oak Street, Delhi</h4>
-                                <p>Provider: State Farm</p>
-                            </div>
-                            <span class="status-badge active">Active</span>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="item-header">
-                            <div class="item-info">
-                                <h4>5678 Pine Avenue, Delhi</h4>
-                                <p>Provider: Allstate</p>
-                            </div>
-                             <span class="status-badge expiring">Expiring Soon</span>
-                        </div>
-                    </div>
-                </div>
-            </aside>
+         /* --- Table --- */
+         .table-wrapper { width: 100%; overflow-x: auto; }
+         #results-table { width: 100%; border-collapse: collapse; }
+         #results-table thead th { padding: 12px 16px; text-align: left; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid var(--border-color); }
+         #results-table tbody td { padding: 16px; border-bottom: 1px solid var(--border-color); }
+         #results-table tbody tr:last-child td { border-bottom: none; }
+         .score { color: var(--accent-pink); font-weight: 700; }
 
-        </main>
-    </div>
+         /* --- Top Deals List --- */
+         .list-item { padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+         .list-item:last-child { border-bottom: none; }
+         .list-item .item-header { display: flex; justify-content: space-between; align-items: center; }
+         .item-info h4 { font-size: 1rem; margin-bottom: 4px; color: var(--text-light); }
+         .item-info p { font-size: 0.9rem; color: var(--text-muted); }
+         .item-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-pink); }
+         .status-badge { font-size: 0.8rem; padding: 4px 10px; border-radius: 15px; color: #fff; }
+         .active { background-color: var(--accent-cyan); }
+         .expiring { background-color: var(--accent-yellow); color: var(--bg-dark); }
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const apiBaseUrl = 'https://deal-hunter-api.onrender.com';
-            const loader = document.getElementById('loader');
-            const dashboardContent = document.getElementById('dashboard-content');
-            
-            function animateValue(element, start, end, duration, suffix = '') {
-                let startTimestamp = null;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    const currentValue = progress * (end - start) + start;
-                    if (suffix === '%') element.innerHTML = `${currentValue.toFixed(2)}${suffix}`;
-                    else if (Math.abs(end) < 100) element.innerHTML = currentValue.toFixed(2);
-                    else element.innerHTML = Math.floor(currentValue).toLocaleString('en-IN');
-                    if (progress < 1) window.requestAnimationFrame(step);
-                };
-                window.requestAnimationFrame(step);
-            }
+         /* --- Investment Analyzer Form --- */
+         .analyzer-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+         .form-group label { display: block; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); }
+         .form-group input { width: 100%; background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-light); padding: 10px; border-radius: 8px; }
+         .form-button { grid-column: 1 / -1; margin-top: 10px; background-color: var(--accent-pink); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+         .analyzer-results { margin-top: 20px; text-align: center; }
+         .analyzer-results .metric-value { font-size: 2rem; color: var(--accent-yellow); }
 
-            fetch(`${apiBaseUrl}/results`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.properties && data.properties.length > 0) {
-                        const properties = data.properties;
-                        loader.style.display = 'none';
-                        dashboardContent.style.display = 'grid';
-                        
-                        const kpiContainer = document.getElementById('kpi-container');
-                        kpiContainer.innerHTML = ''; // Clear before adding
-                        const totalDeals = properties.length;
-                        const avgCapRate = properties.reduce((sum, p) => sum + p.cap_rate, 0) / totalDeals;
-                        const avgCocReturn = properties.reduce((sum, p) => sum + p.cash_on_cash_return, 0) / totalDeals;
-                        const avgScore = properties.reduce((sum, p) => sum + p.investment_score, 0) / totalDeals;
+         /* --- Chart Styles --- */
+         .chart-container { width: 100%; height: auto; min-height: 250px; }
 
-                        kpiContainer.innerHTML = `
-                            <div class="kpi-card"><h3>Deals in Database</h3><p class="metric-value" id="total-deals">0</p></div>
-                            <div class="kpi-card"><h3>Avg. Cap Rate</h3><p class="metric-value" id="avg-cap-rate">0.00%</p></div>
-                            <div class="kpi-card"><h3>Avg. CoC Return</h3><p class="metric-value" id="avg-coc-return">0.00%</p></div>
-                            <div class="kpi-card"><h3>Avg. Score</h3><p class="metric-value" id="avg-score">0.00</p></div>
-                        `;
+         /* --- Loader --- */
+         #loader { text-align: center; padding: 80px; }
+         .loader-dots span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: var(--accent-pink); margin: 0 5px; animation: loaderBounce 1.4s infinite ease-in-out both; }
+         .loader-dots span:nth-child(1) { animation-delay: -0.32s; }
+         .loader-dots span:nth-child(2) { animation-delay: -0.16s; }
+         @keyframes loaderBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+     </style>
+ </head>
+ <body>
+     <div class="app-container">
+         <header class="header">
+             <div class="logo">🏘️ Realty<span>Pulse</span></div>
+         </header>
 
-                        animateValue(document.getElementById('total-deals'), 0, totalDeals, 1500);
-                        animateValue(document.getElementById('avg-cap-rate'), 0, avgCapRate, 1500, '%');
-                        animateValue(document.getElementById('avg-coc-return'), 0, avgCocReturn, 1500, '%');
-                        animateValue(document.getElementById('avg-score'), 0, avgScore, 1500);
+         <div id="loader">
+             <div class="loader-dots"><span></span><span></span><span></span></div>
+             <p style="margin-top: 20px; color: var(--text-muted);">Initializing AI... Fetching live market data...</p>
+         </div>
 
-                        const tableBody = document.getElementById('results-body');
-                        tableBody.innerHTML = '';
-                        properties.forEach(prop => {
-                            let row = tableBody.insertRow();
-                            row.innerHTML = `<td>${prop.title}</td><td>${prop.price_text}</td><td>${prop.area_sqft}</td><td><b class="score">${prop.investment_score.toFixed(2)}</b></td>`;
-                        });
+         <main id="dashboard-content" style="display:none;">
+             <section id="kpi-section" class="card"><div class="kpi-grid" id="kpi-container"></div></section>
 
-                        const topDealsList = document.getElementById('top-deals-list');
-                        topDealsList.innerHTML = '';
-                        properties.slice(0, 3).forEach(prop => {
-                            const dealItem = document.createElement('div');
-                            dealItem.className = 'list-item';
-                            dealItem.innerHTML = `<div class="item-info"><h4>${prop.title.split('in')[0]}</h4><p>${prop.price_text}</p></div><div class="item-value">${prop.investment_score.toFixed(2)}</div>`;
-                            topDealsList.appendChild(dealItem);
-                        });
+             <section id="investment-analyzer-section" class="card">
+                 <h2>Investment Analyzer</h2>
+                 <div class="analyzer-form-grid">
+                     <div class="form-group"><label>Purchase Price</label><input type="number" id="ia-price" value="9000000"></div>
+                     <div class="form-group"><label>Down Payment</label><input type="number" id="ia-downpayment" value="2250000"></div>
+                     <div class="form-group"><label>Monthly Rent</label><input type="number" id="ia-rent" value="38500"></div>
+                     <div class="form-group"><label>Monthly Expenses</label><input type="number" id="ia-expenses" value="7000"></div>
+                     <div class="form-group"><label>Interest Rate (%)</label><input type="number" id="ia-interest" value="7"></div>
+                     <div class="form-group"><label>Loan Term (years)</label><input type="number" id="ia-term" value="30"></div>
+                     <button id="ia-calculate-btn" class="form-button">Calculate</button>
+                 </div>
+                 <div class="analyzer-results kpi-grid">
+                     <div class="kpi-card"><h3>Cap Rate</h3><p class="metric-value" id="ia-cap-rate-result">--</p></div>
+                     <div class="kpi-card"><h3>Cash on Cash Return</h3><p class="metric-value" id="ia-coc-result">--</p></div>
+                 </div>
+             </section>
 
-                    } else {
-                        loader.innerHTML = '<p style="color: var(--text-muted);">The database is empty. The daily automated scraper will populate it soon.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    loader.innerHTML = '<p style="color: var(--text-muted);">Failed to load data from the API. The server may be starting up or an error occurred.</p>';
-                });
-        });
-    </script>
-</body>
-</html>
+             <section id="portfolio-distribution-section" class="card">
+                 <h2>Portfolio Distribution</h2>
+                 <div class="chart-container">
+                     <canvas id="portfolioChart"></canvas>
+                 </div>
+             </section>
+
+             <section id="table-section" class="card">
+                 <h2>Live Deal Listings</h2>
+                 <div class="table-wrapper"><table id="results-table"><thead><tr><th>Title</th><th>Price</th><th>Area</th><th>Score</th></tr></thead><tbody id="results-body"></tbody></table></div>
+             </section>
+
+             <aside id="top-deals-section" class="card">
+                 <h2>Top Performing Deals</h2>
+                 <div id="top-deals-list"></div>
+             </aside>
+         </main>
+     </div>
+
+     <script>
+         document.addEventListener('DOMContentLoaded', function() {
+             const apiBaseUrl = 'https://deal-hunter-api.onrender.com';
+             const loader = document.getElementById('loader');
+             const dashboardContent = document.getElementById('dashboard-content');
+
+             function animateValue(element, start, end, duration, suffix = '') {
+                 let startTimestamp = null;
+                 const step = (timestamp) => {
+                     if (!startTimestamp) startTimestamp = timestamp;
+                     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                     const currentValue = progress * (end - start) + start;
+                     if (suffix === '%') element.innerHTML = `${currentValue.toFixed(2)}${suffix}`;
+                     else if (Math.abs(end) < 100) element.innerHTML = currentValue.toFixed(2);
+                     else element.innerHTML = Math.floor(currentValue).toLocaleString('en-IN');
+                     if (progress < 1) window.requestAnimationFrame(step);
+                 };
+                 window.requestAnimationFrame(step);
+             }
+
+             // --- Main Data Fetching & Display Logic ---
+             fetch(`${apiBaseUrl}/results`)
+                 .then(response => response.json())
+                 .then(data => {
+                     if (data.properties && data.properties.length > 0) {
+                         const properties = data.properties;
+                         loader.style.display = 'none';
+                         dashboardContent.style.display = 'grid';
+
+                         const totalDeals = properties.length;
+                         const avgCapRate = properties.reduce((sum, p) => sum + p.cap_rate, 0) / totalDeals;
+                         const avgCocReturn = properties.reduce((sum, p) => sum + p.cash_on_cash_return, 0) / totalDeals;
+                         const avgScore = properties.reduce((sum, p) => sum + p.investment_score, 0) / totalDeals;
+
+                         const kpiContainer = document.getElementById('kpi-container');
+                         kpiContainer.innerHTML = `
+                             <div class="kpi-card"><h3>Deals in Database</h3><p class="metric-value" id="total-deals"></p></div>
+                             <div class="kpi-card"><h3>Avg. Cap Rate</h3><p class="metric-value" id="avg-cap-rate"></p></div>
+                             <div class="kpi-card"><h3>Avg. CoC Return</h3><p class="metric-value" id="avg-coc-return"></p></div>
+                             <div class="kpi-card"><h3>Avg. Score</h3><p class="metric-value" id="avg-score"></p></div>
+                         `;
+
+                         animateValue(document.getElementById('total-deals'), 0, totalDeals, 1500);
+                         animateValue(document.getElementById('avg-cap-rate'), 0, avgCapRate, 1500, '%');
+                         animateValue(document.getElementById('avg-coc-return'), 0, avgCocReturn, 1500, '%');
+                         animateValue(document.getElementById('avg-score'), 0, avgScore, 1500);
+
+                         const tableBody = document.getElementById('results-body');
+                         tableBody.innerHTML = '';
+                         properties.forEach(prop => {
+                             let row = tableBody.insertRow();
+                             row.innerHTML = `<td>${prop.title}</td><td>${prop.price_text}</td><td>${prop.area_sqft}</td><td><b class="score">${prop.investment_score.toFixed(2)}</b></td>`;
+                         });
+
+                         const topDealsList = document.getElementById('top-deals-list');
+                         topDealsList.innerHTML = '';
+                         properties.slice(0, 3).forEach(prop => {
+                             const dealItem = document.createElement('div');
+                             dealItem.className = 'list-item';
+                             dealItem.innerHTML = `<div class="item-info"><h4>${prop.title.split('in')[0]}</h4><p>${prop.price_text}</p></div><div class="item-value">${prop.investment_score.toFixed(2)}</div>`;
+                             topDealsList.appendChild(dealItem);
+                         });
+
+                         // --- NEW: Portfolio Distribution Chart ---
+                         const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+                         const portfolioData = {
+                             labels: ['Apartments', 'Houses', 'Commercial', 'Land'],
+                             datasets: [{
+                                 data: [65, 20, 10, 5], // Replace with your actual data
+                                 backgroundColor: [
+                                     'var(--chart-primary)',
+                                     'var(--chart-secondary)',
+                                     'var(--chart-tertiary)',
+                                     'var(--chart-quaternary)'
+                                 ],
+                                 hoverOffset: 4
+                             }]
+                         };
+                         new Chart(portfolioCtx, {
+                             type: 'doughnut',
+                             data: portfolioData,
+                             options: {
+                                 responsive: true,
+                                 maintainAspectRatio: false,
+                                 plugins: {
+                                     legend: {
+                                         position: 'bottom',
+                                         labels: {
+                                             color: 'var(--text-muted)'
+                                         }
+                                     }
+                                 }
+                             }
+                         });
+                     } else {
+                         loader.innerHTML = '<p>The database is empty. The daily scraper is scheduled to run.</p>';
+                     }
+                 })
+                 .catch(error => {
+                     console.error('Error fetching data:', error);
+                     loader.innerHTML = '<p>Failed to load data from the API. The server may be starting up or an error occurred.</p>';
+                 });
+
+             // --- Investment Analyzer Logic (remains the same) ---
+             const calculateBtn = document.getElementById('ia-calculate-btn');
+             calculateBtn.addEventListener('click', function() {
+                 const price = parseFloat(document.getElementById('ia-price').value);
+                 const downPayment = parseFloat(document.getElementById('ia-downpayment').value);
+                 const rent = parseFloat(document.getElementById('ia-rent').value);
+                 const expenses = parseFloat(document.getElementById('ia-expenses').value);
+                 const interest = parseFloat(document.getElementById('ia-interest').value) / 100;
+                 const term = parseFloat(document.getElementById('ia-term').value);
+
+                 if([price, downPayment, rent, expenses, interest, term].some(isNaN)) {
+                     alert("Please fill in all fields with valid numbers.");
+                     return;
+                 }
+
+                 const grossIncome = rent * 12;
+                 const opEx = expenses * 12;
+                 const noi = grossIncome - opEx;
+                 const capRate = (noi / price) * 100;
+
+                 const loanAmount = price - downPayment;
+                 const monthlyInterest = interest / 12;
+                 const numPayments = term * 12;
+                 const monthlyPayment = loanAmount > 0 ? loanAmount * (monthlyInterest * Math.pow(1 + monthlyInterest, numPayments)) / (Math.pow(1 + monthlyInterest, numPayments) - 1) : 0;
+                 const annualDebtService = monthlyPayment * 12;
+                 const preTaxCashFlow = noi - annualDebtService;
+                 const cocReturn = (preTaxCashFlow / downPayment) * 100;
+
+                 document.getElementById('ia-cap-rate-result').innerText = `${capRate.toFixed(2)}%`;
+                 document.getElementById('ia-coc-result').innerText = `${cocReturn.toFixed(2)}%`;
+             });
+         });
+     </script>
+ </body>
+ </html>
