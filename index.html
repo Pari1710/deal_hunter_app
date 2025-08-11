@@ -175,122 +175,60 @@
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-// START: Add this new routing logic
-const navLinks = document.querySelectorAll('.nav-link');
-const pages = document.querySelectorAll('.page');
-const mainDashboard = document.querySelector('.main-dashboard'); // Your original dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- PAGE ROUTING LOGIC ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
 
-function switchPage(hash) {
-    navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === hash));
-    
-    // Hide all pages and the main dashboard first
-    pages.forEach(page => page.style.display = 'none');
-    mainDashboard.style.display = 'none';
-
-    if (hash === '#dashboard') {
-        mainDashboard.style.display = 'grid'; // Show the original dashboard
-    } else {
-        const activePage = document.querySelector(hash);
-        if (activePage) activePage.style.display = 'block';
-    }
-}
-navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const hash = this.getAttribute('href');
-        switchPage(hash);
-    });
-});
-const initialHash = window.location.hash || "#dashboard";
-switchPage(initialHash);
-// END: New routing logic
-            const apiBaseUrl = 'https://deal-hunter-api.onrender.com';
-            const loader = document.getElementById('loader');
-            const dashboardContent = document.getElementById('dashboard-content');
-            
-            // --- ANIMATION FUNCTION ---
-            function animateValue(element, start, end, duration, suffix = '') {
-                let startTimestamp = null;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    const currentValue = progress * (end - start) + start;
-                    if (suffix === '%') {
-                        element.innerHTML = `${currentValue.toFixed(2)}${suffix}`;
-                    } else if (end < 100) {
-                         element.innerHTML = currentValue.toFixed(2);
-                    }
-                    else {
-                        element.innerHTML = Math.floor(currentValue).toLocaleString('en-IN');
-                    }
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
-                    }
-                };
-                window.requestAnimationFrame(step);
-            }
-
-            // --- DATA FETCHING & DISPLAY ---
-            fetch(`${apiBaseUrl}/results`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.properties && data.properties.length > 0) {
-                        const properties = data.properties;
-                        loader.style.display = 'none';
-                        dashboardContent.style.display = 'grid';
-                        
-                        // --- Populate KPIs with animation ---
-                        const totalDeals = properties.length;
-                        const avgCapRate = properties.reduce((sum, p) => sum + p.cap_rate, 0) / totalDeals;
-                        const avgCocReturn = properties.reduce((sum, p) => sum + p.cash_on_cash_return, 0) / totalDeals;
-                        const avgScore = properties.reduce((sum, p) => sum + p.investment_score, 0) / totalDeals;
-
-                        animateValue(document.getElementById('total-deals'), 0, totalDeals, 1500);
-                        animateValue(document.getElementById('avg-cap-rate'), 0, avgCapRate, 1500, '%');
-                        animateValue(document.getElementById('avg-coc-return'), 0, avgCocReturn, 1500, '%');
-                        animateValue(document.getElementById('avg-score'), 0, avgScore, 1500);
-
-                        // --- Populate Main Table ---
-                        const tableBody = document.getElementById('results-body');
-                        tableBody.innerHTML = '';
-                        properties.forEach(prop => {
-                            let row = tableBody.insertRow();
-                            row.innerHTML = `
-                                <td>${prop.title}</td>
-                                <td>${prop.price_text}</td>
-                                <td>${prop.area_sqft}</td>
-                                <td><b class="score">${prop.investment_score.toFixed(2)}</b></td>
-                            `;
-                        });
-
-                        // --- Populate Top 5 Deals Sidebar ---
-                        const topDealsList = document.getElementById('top-deals-list');
-                        topDealsList.innerHTML = '';
-                        properties.slice(0, 5).forEach(prop => {
-                            const dealItem = document.createElement('div');
-                            dealItem.className = 'deal-list-item';
-                            dealItem.innerHTML = `
-                                <div class="deal-info">
-                                    <h4>${prop.title.split('in')[0]}</h4>
-                                    <p>${prop.price_text}</p>
-                                </div>
-                                <div class="deal-score">${prop.investment_score.toFixed(2)}</div>
-                            `;
-                            topDealsList.appendChild(dealItem);
-                        });
-
-                    } else {
-                        loader.innerHTML = '<p>The database is empty. The daily automated scraper will populate it soon.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    loader.innerHTML = '<p>Failed to load data from the API. The server may be starting up or an error occurred.</p>';
-                });
+        function switchPage(hash) {
+            navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === hash));
+            pages.forEach(page => page.classList.toggle('active', '#' + page.id === hash));
+        }
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const hash = this.getAttribute('href');
+                if (window.location.hash !== hash) window.history.pushState(null, null, hash);
+                switchPage(hash);
+            });
         });
-    </script>
+        const initialHash = window.location.hash || "#live-deals"; // <-- Corrected default page
+        switchPage(initialHash);
+
+        // --- LIVE DASHBOARD FETCH LOGIC ---
+        const apiBaseUrl = 'https://deal-hunter-api.onrender.com';
+        const loader = document.getElementById('loader');
+        
+        fetch(`${apiBaseUrl}/results`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.properties && data.properties.length > 0) {
+                    loader.style.display = 'none';
+                    document.getElementById('live-deals-content').style.display = 'block';
+                    
+                    const tableBody = document.getElementById('results-body');
+                    tableBody.innerHTML = '';
+                    data.properties.forEach(prop => {
+                        let row = tableBody.insertRow();
+                        row.innerHTML = `
+                            <td>${prop.title}</td>
+                            <td>${prop.price_text}</td>
+                            <td>${prop.area_sqft}</td>
+                            <td><b class="score">${prop.investment_score.toFixed(2)}</b></td>
+                        `;
+                    });
+                } else {
+                    loader.innerHTML = '<p>The database is empty. The daily automated scraper will populate it soon.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                loader.innerHTML = '<p>Failed to load data from the API. The server may be starting up or an error occurred.</p>';
+            });
+    });
+</script>
 </body>
 </html>
+
 
 
