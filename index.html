@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property Dashboard - AI Analyzer</title>
+    <title>Capital Realty Hub - AI Property Intelligence</title>
     <style>
-        /* --- GLOBAL STYLES & NEW NEUTRAL THEME --- */
         :root {
             --bg-light: #F8F9FA; --bg-white: #FFFFFF; --border-color: #DEE2E6;
             --text-dark: #212529; --text-muted: #6C757D; --accent-blue: #0D6EFD;
@@ -22,7 +21,7 @@
 
         /* --- SIDEBAR NAVIGATION --- */
         .sidebar {
-            width: 280px;
+            width: 260px;
             background-color: var(--bg-white);
             border-right: 1px solid var(--border-color);
             padding: 24px;
@@ -34,39 +33,37 @@
         .sidebar-header {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-dark);
             margin-bottom: 40px;
         }
         .sidebar-header span { color: var(--accent-blue); }
-        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-menu { list-style: none; }
         .nav-item a {
             display: flex;
             align-items: center;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 8px;
             border-radius: 8px;
             text-decoration: none;
-            color: var(--text-muted);
+            color: #343a40;
             font-weight: 500;
             transition: background-color 0.2s, color 0.2s;
         }
-        .nav-item a:hover { background-color: var(--bg-light); color: var(--text-dark); }
+        .nav-item a:hover { background-color: #e9ecef; color: var(--text-dark); }
         .nav-item a.active { background-color: var(--accent-blue); color: #fff; }
-        .nav-item a svg { margin-right: 12px; }
+        .nav-item a svg { margin-right: 16px; width: 20px; height: 20px; }
 
         /* --- MAIN CONTENT AREA --- */
         .main-content {
-            margin-left: 280px;
-            width: calc(100% - 280px);
+            margin-left: 260px;
+            width: calc(100% - 260px);
             padding: 40px;
-            animation: fadeIn 0.5s ease-out;
         }
-        .page { display: none; }
+        .page { display: none; animation: fadeIn 0.5s ease-out; }
         .page.active { display: block; }
         h2 { font-size: 2.25rem; margin-bottom: 10px; }
-        .page-description { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; }
-
-        /* --- CARD & GRID STYLES --- */
+        .page-description { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; max-width: 800px; }
+        
+        /* --- General Components --- */
         .card {
             background-color: var(--bg-white);
             padding: 24px;
@@ -76,116 +73,138 @@
         }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
         }
-        .kpi-card h3 { font-size: 1rem; color: var(--text-muted); font-weight: 500; }
+        .kpi-card h3 { font-size: 1rem; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
         .kpi-card .metric-value { font-size: 2.25rem; font-weight: 700; color: var(--accent-blue); }
-        
-        /* --- TABLE STYLES --- */
+
+        /* --- Table --- */
         .table-wrapper { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         thead th { padding: 12px 16px; text-align: left; font-weight: 600; color: var(--text-muted); border-bottom: 2px solid var(--border-color); }
-        tbody td { padding: 16px; border-bottom: 1px solid var(--border-color); }
+        tbody td { padding: 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
         tbody tr:last-child td { border-bottom: none; }
-        tbody tr:hover { background-color: #f8f9fa; }
-        
-        /* --- INVESTMENT ANALYZER STYLES --- */
-        .analyzer-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; font-size: 1rem; border: 1px solid var(--border-color); border-radius: 8px; }
-        .form-button { width: 100%; padding: 15px; font-size: 1rem; font-weight: 600; color: #fff; background-color: var(--accent-blue); border: none; border-radius: 8px; cursor: pointer; }
-        .scenario-card { background-color: var(--bg-light); padding: 20px; border-radius: 12px; margin-bottom: 16px; }
-        .scenario-card h4 { display: flex; justify-content: space-between; }
-        .scenario-card h4 span { background-color: var(--accent-blue); color: #fff; font-size: 0.8rem; padding: 4px 8px; border-radius: 10px; }
+        .score-tag { padding: 4px 10px; border-radius: 15px; font-size: 0.9rem; font-weight: 700; color: #fff; background-color: var(--accent-green); }
 
-        /* --- LOADER --- */
+        /* --- Portfolio Page Specific --- */
+        .portfolio-card { text-align: center; }
+        .portfolio-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 16px; }
+        .portfolio-card h4 { font-size: 1.2rem; margin-bottom: 8px; }
+        .portfolio-card .details { display: flex; justify-content: space-around; color: var(--text-muted); margin-top: 16px; }
+
+        /* --- Loader --- */
         #loader { text-align: center; padding: 80px; }
         .loader-pulse { width: 50px; height: 50px; margin: auto; border-radius: 50%; background-color: var(--accent-blue); animation: pulse 1.5s infinite ease-in-out; }
         @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.8); opacity: 0.5; } }
-
     </style>
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="sidebar-header">Property <span>Dashboard</span></div>
+        <div class="sidebar-header">Capital <span>Realty Hub</span></div>
         <ul class="nav-menu">
-            <li class="nav-item"><a href="#live-dashboard" class="nav-link active">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                Live Dashboard
+            <li class="nav-item"><a href="#live-deals" class="nav-link active">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z"/></svg>
+                Live Deals
             </a></li>
-            <li class="nav-item"><a href="#investment-analyzer" class="nav-link">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
-                Investment Analyzer
+            <li class="nav-item"><a href="#my-portfolio" class="nav-link">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zM10 9h8v2h-8zm0 4h5v2h-5z"/></svg>
+                My Portfolio
             </a></li>
-             <li class="nav-item"><a href="#property-valuation" class="nav-link">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                Property Valuation
+            <li class="nav-item"><a href="#deal-calculator" class="nav-link">
+                 <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                Deal Calculator
+            </a></li>
+            <li class="nav-item"><a href="#market-pulse" class="nav-link">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.09-4-4L2 16.99z"/></svg>
+                Market Pulse
+            </a></li>
+            <li class="nav-item"><a href="#cashflow-ledger" class="nav-link">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-1 14H5c-.55 0-1-.45-1-1V8h16v9c0 .55-.45 1-1 1zm1-11H4V6h16v2zm-5 6H9v-2h6v2z"/></svg>
+                Cash Flow Ledger
+            </a></li>
+             <li class="nav-item"><a href="#ai-copilot" class="nav-link">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                AI Co-pilot
             </a></li>
         </ul>
     </aside>
 
     <main class="main-content">
-        <section id="live-dashboard" class="page active">
-            <h2>Live Market Dashboard</h2>
-            <p class="page-description">Displaying the latest deals found by our daily automated scraper.</p>
+        <section id="live-deals" class="page active">
+            <h2>Live Deal Dashboard</h2>
+            <p class="page-description">Displaying the latest deals found by our daily automated scraper from across the Delhi NCR.</p>
             <div id="loader">
                 <div class="loader-pulse"></div>
                 <p style="margin-top: 20px; color: var(--text-muted);">Connecting to live market data...</p>
             </div>
-            <div id="live-dashboard-content" class="card" style="display:none;">
+            <div id="live-deals-content" class="card" style="display:none;">
                  <div class="table-wrapper">
                     <table id="results-table">
-                        <thead><tr><th>Title</th><th>Price</th><th>Area (sqft)</th><th>Score</th></tr></thead>
+                        <thead><tr><th>Title</th><th>Price</th><th>Area</th><th>Score</th></tr></thead>
                         <tbody id="results-body"></tbody>
                     </table>
                  </div>
             </div>
         </section>
 
-        <section id="investment-analyzer" class="page">
-            <h2>Investment Analyzer</h2>
-            <p class="page-description">Calculate the potential return of any property by filling in the details below.</p>
-            <div class="analyzer-layout card">
-                <div>
-                    <h3>Property Details</h3>
-                    <div class="form-group"><label>Purchase Price</label><input type="number" id="ia-price" value="5000000"></div>
-                    <div class="form-group"><label>Monthly Rent</label><input type="number" id="ia-rent" value="25000"></div>
-                    <div class="form-group"><label>Interest Rate (%)</label><input type="number" id="ia-interest" value="7"></div>
-                    <div class="form-group"><label>Down Payment</label><input type="number" id="ia-downpayment" value="1000000"></div>
-                    <div class="form-group"><label>Monthly Expenses (Taxes, Insurance, etc.)</label><input type="number" id="ia-expenses" value="5000"></div>
-                    <div class="form-group"><label>Loan Term (years)</label><input type="number" id="ia-term" value="30"></div>
-                    <button id="ia-calculate-btn" class="form-button">Calculate Investment Metrics</button>
-                </div>
-                <div>
-                    <h3>Investment Scenarios</h3>
-                    <div class="scenario-card">
-                        <h4>Cap Rate <span><span id="ia-cap-rate-result">--</span>%</span></h4>
-                        <p class="page-description">The rate of return based on the income the property is expected to generate.</p>
+        <section id="my-portfolio" class="page">
+            <h2>My Portfolio</h2>
+            <p class="page-description">A snapshot of your current real estate assets.</p>
+            <div class="grid-container">
+                <div class="card portfolio-card">
+                    <img src="https://imagecdn.99acres.com/media1/31256/15/625135711M-1753773168179.webp" alt="Property Image">
+                    <h4>2 BHK Flat in DaryaGanj</h4>
+                    <p class="page-description">Value: ₹1.1 Cr</p>
+                    <div class="details">
+                        <span>Score: 8.5</span> | <span>Cap Rate: 4.1%</span>
                     </div>
-                    <div class="scenario-card">
-                        <h4>Cash-on-Cash Return <span><span id="ia-coc-result">--</span>%</span></h4>
-                        <p class="page-description">The cash income earned on the cash you invested. This is a key profitability metric.</p>
+                </div>
+                <div class="card portfolio-card">
+                    <img src="https://imagecdn.99acres.com/media1/30954/18/619098771M-1752510415184.jpg" alt="Property Image">
+                    <h4>3 BHK Flat in Prithviraj Road</h4>
+                    <p class="page-description">Value: ₹8 Cr</p>
+                    <div class="details">
+                        <span>Score: 7.2</span> | <span>Cap Rate: 3.8%</span>
+                    </div>
+                </div>
+                 <div class="card portfolio-card">
+                    <img src="https://imagecdn.99acres.com/media1/31361/19/627239013M-1754120891927.jpg" alt="Property Image">
+                    <h4>4 BHK Builder Floor in Defence Colony</h4>
+                    <p class="page-description">Value: ₹15.85 Cr</p>
+                    <div class="details">
+                        <span>Score: 6.9</span> | <span>Cap Rate: 3.5%</span>
                     </div>
                 </div>
             </div>
         </section>
         
-        <section id="property-valuation" class="page">
-            <h2>AI Property Valuation</h2>
-            <p class="page-description">Enter a property address to get a simulated AI-powered valuation and market analysis.</p>
+        <section id="deal-calculator" class="page">
+            <h2>Deal Calculator</h2>
+            <p class="page-description">A powerful tool to underwrite any potential investment.</p>
             <div class="card">
-                <h3>Property Address Search</h3>
-                 <div class="form-group"><label>Property Address</label><input type="text" id="pv-address" placeholder="e.g., 123 Oak Street, Navi Mumbai"></div>
-                 <button class="form-button">Analyze Property</button>
-                 <div style="text-align:center; padding: 40px; color: var(--text-muted);">
-                     <h3>Enter an address to begin.</h3>
-                     <p>(This is a prototype feature for future development)</p>
-                 </div>
+                <h3>Coming Soon...</h3>
+                <p>This section will feature the advanced investment analyzer to model your own deals.</p>
             </div>
         </section>
+
+        <section id="market-pulse" class="page">
+             <h2>Market Pulse</h2>
+             <p class="page-description">High-level analytics for the Delhi NCR market.</p>
+             <div class="card"><h3>Coming Soon...</h3></div>
+        </section>
+        <section id="cashflow-ledger" class="page">
+             <h2>Cash Flow Ledger</h2>
+             <p class="page-description">Track income and expenses for your portfolio.</p>
+             <div class="card"><h3>Coming Soon...</h3></div>
+        </section>
+        <section id="ai-copilot" class="page">
+             <h2>AI Co-pilot</h2>
+             <p class="page-description">Your personal AI real estate investment assistant.</p>
+             <div class="card"><h3>Coming Soon...</h3></div>
+        </section>
+
     </main>
     
     <script>
@@ -195,29 +214,35 @@
             const pages = document.querySelectorAll('.page');
 
             function switchPage(hash) {
-                navLinks.forEach(link => link.classList.remove('active'));
-                pages.forEach(page => page.classList.remove('active'));
-
-                const activeLink = document.querySelector(`.nav-link[href="${hash}"]`);
-                const activePage = document.querySelector(hash);
-
-                if (activeLink) activeLink.classList.add('active');
-                if (activePage) activePage.classList.add('active');
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === hash) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+                pages.forEach(page => {
+                    if ('#' + page.id === hash) {
+                        page.classList.add('active');
+                    } else {
+                        page.classList.remove('active');
+                    }
+                });
             }
-
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const hash = this.getAttribute('href');
                     switchPage(hash);
-                    window.location.hash = hash;
+                    window.history.pushState(null, null, hash);
                 });
             });
-            // Handle initial page load
-            switchPage(window.location.hash || "#live-dashboard");
+            // Handle initial page load based on URL hash
+            const initialHash = window.location.hash || "#live-deals";
+            switchPage(initialHash);
 
 
-            // --- LIVE DASHBOARD LOGIC ---
+            // --- LIVE DASHBOARD FETCH LOGIC ---
             const apiBaseUrl = 'https://deal-hunter-api.onrender.com';
             const loader = document.getElementById('loader');
             
@@ -226,7 +251,7 @@
                 .then(data => {
                     if (data.properties && data.properties.length > 0) {
                         loader.style.display = 'none';
-                        document.getElementById('live-dashboard-content').style.display = 'block';
+                        document.getElementById('live-deals-content').style.display = 'block';
                         
                         const tableBody = document.getElementById('results-body');
                         tableBody.innerHTML = '';
@@ -236,7 +261,7 @@
                                 <td>${prop.title}</td>
                                 <td>${prop.price_text}</td>
                                 <td>${prop.area_sqft}</td>
-                                <td><b style="color: var(--accent-green)">${prop.investment_score.toFixed(2)}</b></td>
+                                <td><b class="score-tag">${prop.investment_score.toFixed(2)}</b></td>
                             `;
                         });
                     } else {
@@ -247,40 +272,6 @@
                     console.error('Error fetching data:', error);
                     loader.innerHTML = '<p>Failed to load data from the API. The server may be starting up.</p>';
                 });
-
-            // --- INVESTMENT ANALYZER LOGIC ---
-            const calculateBtn = document.getElementById('ia-calculate-btn');
-            calculateBtn.addEventListener('click', function() {
-                const price = parseFloat(document.getElementById('ia-price').value);
-                const rent = parseFloat(document.getElementById('ia-rent').value);
-                const expenses = parseFloat(document.getElementById('ia-expenses').value);
-                const downPayment = parseFloat(document.getElementById('ia-downpayment').value);
-                const interest = parseFloat(document.getElementById('ia-interest').value) / 100;
-                const term = parseFloat(document.getElementById('ia-term').value);
-
-                // Calculate NOI
-                const grossIncome = rent * 12;
-                const opEx = expenses * 12;
-                const noi = grossIncome - opEx;
-
-                // Calculate Cap Rate
-                const capRate = (noi / price) * 100;
-
-                // Calculate Cash Flow
-                const loanAmount = price - downPayment;
-                const monthlyInterest = interest / 12;
-                const numPayments = term * 12;
-                const monthlyPayment = loanAmount * (monthlyInterest * Math.pow(1 + monthlyInterest, numPayments)) / (Math.pow(1 + monthlyInterest, numPayments) - 1);
-                const annualDebtService = monthlyPayment * 12;
-                const preTaxCashFlow = noi - annualDebtService;
-
-                // Calculate Cash-on-Cash Return
-                const cocReturn = (preTaxCashFlow / downPayment) * 100;
-
-                // Display results
-                document.getElementById('ia-cap-rate-result').innerText = capRate.toFixed(2);
-                document.getElementById('ia-coc-result').innerText = cocReturn.toFixed(2);
-            });
         });
     </script>
 </body>
