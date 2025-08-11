@@ -31,26 +31,99 @@
             <a href="#">Live Dashboard</a>
         </nav>
     </header>
-    <main class="container">
-        <section id="dashboard" style="padding: 60px 0;">
-            <h2>Live Market <span class="accent-text">Dashboard</span></h2>
-            <p style="color: var(--text-secondary);">Displaying the latest deals found by our daily automated scraper.</p>
-            <div id="loader">🚀 Loading latest deals from the database...</div>
-            <table id="results-table" style="display:none;">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Price</th>
-                        <th>Area (sqft)</th>
-                        <th>Cap Rate</th>
-                        <th>Cash-on-Cash Return</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody id="results-body"></tbody>
-            </table>
-        </section>
-    </main>
+    <main class="container executive-dashboard">
+    <section id="key-metrics" class="dashboard-section">
+        <h2>Executive Overview</h2>
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Total Properties Analyzed <span class="today-indicator">(Today)</span></h3>
+                <p class="metric-value" id="total-analyzed">--</p>
+            </div>
+            <div class="metric-card">
+                <h3>Average Investment Score <span class="today-indicator">(Today)</span></h3>
+                <p class="metric-value" id="average-score">--</p>
+            </div>
+            <div class="metric-card">
+                <h3>Top Deal Score <span class="today-indicator">(Today)</span></h3>
+                <p class="metric-value" id="top-score">--</p>
+            </div>
+            <div class="metric-card">
+                <h3>Market Trend (Score) <span class="today-indicator">(Today vs. Yesterday)</span></h3>
+                <p class="metric-value" id="market-trend">--</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard-content" style="display:none;">
+        <div class="dashboard-controls">
+            <div class="filter-group">
+                <label for="bedrooms-filter">Filter by Bedrooms</label>
+                <select id="bedrooms-filter">
+                    <option value="all">All Bedrooms</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="price-range">Filter by Price (Lacs)</label>
+                <div id="price-range"></div> <span id="price-range-value"></span>
+            </div>
+            <div class="filter-group">
+                <label for="property-type-filter">Filter by Type</label>
+                <select id="property-type-filter">
+                    <option value="all">All Types</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="min-score-filter">Minimum Investment Score</label>
+                <select id="min-score-filter">
+                    <option value="all">All Scores</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="visuals-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">Investment Score Distribution</h3>
+                <canvas id="score-distribution-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Price vs. Investment Score</h3>
+                <canvas id="price-score-scatter"></canvas>
+            </div>
+            <div class="ai-insights-panel">
+                <h3>AI Insights <span class="accent-text">(Based on Latest Data)</span></h3>
+                <ul id="ai-insights-list">
+                    <li>Loading AI Insights...</li>
+                </ul>
+            </div>
+            <div class="deal-flow-container">
+                <h3 class="chart-title">Deal Flow</h3>
+                <div class="deal-flow-diagram">
+                    <div class="flow-step scraping active">Scraping Data</div>
+                    <div class="flow-arrow">➡️</div>
+                    <div class="flow-step analysis">Analyzing Properties</div>
+                    <div class="flow-arrow">➡️</div>
+                    <div class="flow-step scoring">Scoring Deals</div>
+                    <div class="flow-arrow">➡️</div>
+                    <div class="flow-step display">Displaying Insights</div>
+                </div>
+            </div>
+        </div>
+
+        <h3>All Matching Deals</h3>
+        <table id="results-table">
+            <thead>
+                <tr><th>Title</th><th>Price</th><th>Area</th><th>Score</th><th>Details</th></tr>
+            </thead>
+            <tbody id="results-body"></tbody>
+        </table>
+    </section>
+</main>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -89,4 +162,5 @@
         });
     </script>
 </body>
+
 </html>
