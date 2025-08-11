@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estate AID - Real Estate AI Workstation</title>
+    <style>
+        :root {
+            --dark-blue: #0F172A; --medium-blue: #1E293B; --light-blue: #334155;
+            --slate: #475569; --text-primary: #E2E8F0; --text-secondary: #94A3B8;
+            --accent-green: #A3E635; --accent-yellow: #FACC15;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--dark-blue); color: var(--text-primary); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        /* ... All other CSS styles from the previous version go here ... */
+         .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background-color: rgba(30, 41, 59, 0.8); border-bottom: 1px solid var(--light-blue); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+        .header .logo { font-size: 1.5rem; font-weight: 700; }
+        #loader { font-size: 1.5rem; text-align: center; padding: 60px; color: var(--text-secondary); }
+        #results-table { width: 100%; border-collapse: collapse; }
+        #results-table th, #results-table td { border-bottom: 1px solid var(--light-blue); padding: 16px; text-align: left; }
+        #results-table th { color: var(--text-secondary); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+        #results-table tbody tr:hover { background-color: var(--light-blue); }
+        .score { color: var(--accent-green); font-size: 1.1rem; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">🏠 Estate <span class="accent-text">AID</span></div>
+        <nav>
+            <a href="#">Live Dashboard</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section id="dashboard" style="padding: 60px 0;">
+            <h2>Live Market <span class="accent-text">Dashboard</span></h2>
+            <p style="color: var(--text-secondary);">Displaying the latest deals found by our daily automated scraper.</p>
+            <div id="loader">🚀 Loading latest deals from the database...</div>
+            <table id="results-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Area (sqft)</th>
+                        <th>Cap Rate</th>
+                        <th>Cash-on-Cash Return</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const apiBaseUrl = 'https://deal-hunter-api.onrender.com'; // Your LIVE API URL
+            const loader = document.getElementById('loader');
+            const table = document.getElementById('results-table');
+            const tableBody = document.getElementById('results-body');
+
+            // --- NEW SIMPLIFIED LOGIC ---
+            // Just fetch the latest results from the database.
+            fetch(`${apiBaseUrl}/results`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.properties && data.properties.length > 0) {
+                        loader.style.display = 'none';
+                        table.style.display = 'table';
+                        data.properties.forEach(prop => {
+                            let row = tableBody.insertRow();
+                            row.innerHTML = `
+                                <td>${prop.title}</td>
+                                <td>${prop.price_text}</td>
+                                <td>${prop.area_sqft}</td>
+                                <td>${prop.cap_rate.toFixed(2)}%</td>
+                                <td>${prop.cash_on_cash_return.toFixed(2)}%</td>
+                                <td><b class="score">${prop.investment_score.toFixed(2)}</b></td>
+                            `;
+                        });
+                    } else {
+                        loader.innerText = 'The database is empty. The first daily scrape will run automatically overnight, or you can trigger it manually on Render.com under Cron Jobs.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    loader.innerText = 'Failed to load data from the API.';
+                });
+        });
+    </script>
+</body>
+</html>
